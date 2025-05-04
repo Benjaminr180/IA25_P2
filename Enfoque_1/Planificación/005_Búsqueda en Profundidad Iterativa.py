@@ -1,0 +1,45 @@
+def busqueda_profundidad_limitada(grafo, nodo_inicio, nodo_objetivo, limite):
+    def dfs_limitado(nodo_actual, objetivo, limite_restante, camino, visitados):
+        camino.append(nodo_actual)
+        visitados.add(nodo_actual)
+
+        if nodo_actual == objetivo:
+            return camino
+
+        if limite_restante <= 0:
+            camino.pop()
+            return None
+
+        for vecino in grafo[nodo_actual]:
+            if vecino not in visitados:
+                resultado = dfs_limitado(vecino, objetivo, limite_restante - 1, camino, visitados)
+                if resultado:
+                    return resultado
+
+        camino.pop()
+        return None
+
+    return dfs_limitado(nodo_inicio, nodo_objetivo, limite, [], set())
+
+
+def busqueda_profundidad_iterativa(grafo, nodo_inicio, nodo_objetivo, limite_maximo):
+    for limite in range(limite_maximo + 1):
+        resultado = busqueda_profundidad_limitada(grafo, nodo_inicio, nodo_objetivo, limite)
+        if resultado:
+            return resultado
+    return None
+
+
+# Grafo simple
+grafo = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': [],
+    'E': ['F'],
+    'F': []
+}
+
+# Ejecutar búsqueda con límite máximo
+camino = busqueda_profundidad_iterativa(grafo, 'A', 'F', 4)
+print("Camino encontrado con iteración:", camino)
